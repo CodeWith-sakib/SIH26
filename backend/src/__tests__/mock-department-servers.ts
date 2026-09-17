@@ -41,6 +41,20 @@ educationApp.get('/v1/students/:id', (req, res) => {
     });
   }
 
+  if (normalizedName === 'nikhil' || normalizedName === 'nikhilkorada') {
+    return res.json({
+      data: {
+        student_name: 'Nikhil Korada',
+        dob: '2005-12-06',
+        phone: '09182820217',
+        email: 'nikhilkorada06@gmail.com',
+        roll_no: 'EDU2025007788',
+        course_name: 'Bachelor of Technology',
+        marks: 88.4,
+      },
+    });
+  }
+
   return res.status(404).json({ error: 'Student not found' });
 });
 
@@ -101,6 +115,10 @@ employmentApp.post('/getApplicant', (req, res) => {
     applicantName = 'Priya Sharma';
     dateOfBirth = '1993-07-22';
     employeeId = 'EMP2023005678';
+  } else if (normalizedName === 'nikhil' || normalizedName === 'nikhilkorada') {
+    applicantName = 'Nikhil Korada';
+    dateOfBirth = '2005-12-06';
+    employeeId = 'EMP2025007788';
   } else {
     return res.status(404).send(soapFault('Applicant not found'));
   }

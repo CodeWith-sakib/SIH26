@@ -20,6 +20,7 @@ import { corsMiddleware } from './src/middleware/cors';
 import { generalRateLimiter } from './src/middleware/rate-limiter';
 import { consentExpiryService } from './src/services/consent-expiry.service';
 import { validateAndLoadConfig } from './src/config/env';
+import path from 'node:path';
 
 const app = express();
 app.disable('x-powered-by');
@@ -29,6 +30,7 @@ app.use(requestId);
 app.use(securityHeadersMiddleware);
 app.use(corsMiddleware);
 app.use(express.json({ limit: '1mb' }));
+app.use('/api/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 
 // General rate limiting for API endpoints
 app.use('/api', generalRateLimiter);

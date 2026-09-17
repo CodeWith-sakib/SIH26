@@ -7,7 +7,7 @@ import UploadedDocument from '../models/UploadedDocument';
 import authenticateToken from '../middleware/auth';
 import requireRole from '../middleware/role';
 import { auditService } from '../audit/audit.service';
-import { deleteDocument, uploadDocument } from '../services/cloudinary.service';
+import { deleteDocument, deleteLocalDocument, uploadDocument, uploadLocalDocument } from '../services/cloudinary.service';
 import { createNotification } from '../services/notification.service';
 
 const router = Router();
@@ -61,17 +61,23 @@ router.post(
     if (application.status === 'withdrawn') return res.status(409).json({ message: 'Documents cannot be uploaded to a withdrawn application' });
 
     let cloudinaryResult;
+    let localResult;
+    const useLocalStorage = process.env.DOCUMENT_STORAGE !== 'cloudinary';
     try {
       const resourceType = req.file.mimetype === 'application/pdf' ? 'raw' : 'image';
-      cloudinaryResult = await uploadDocument(req.file.buffer, id, resourceType);
+      if (useLocalStorage) {
+        localResult = await uploadLocalDocument(req.file.buffer, id, req.file.originalname, req.file.mimetype);
+      } else {
+        cloudinaryResult = await uploadDocument(req.file.buffer, id, resourceType);
+      }
       const document = await UploadedDocument.create({
         applicationId: id,
         userId: req.user!.id,
         originalFileName: req.file.originalname,
-        cloudinaryPublicId: cloudinaryResult.public_id,
-        cloudinarySecureUrl: cloudinaryResult.secure_url,
+        cloudinaryPublicId: localResult?.publicId || cloudinaryResult!.public_id,
+        cloudinarySecureUrl: localResult?.secureUrl || cloudinaryResult!.secure_url,
         resourceType,
-        format: cloudinaryResult.format || req.file.originalname.split('.').pop()?.toLowerCase() || 'unknown',
+        format: localResult?.format || cloudinaryResult?.format || req.file.originalname.split('.').pop()?.toLowerCase() || 'unknown',
         mimeType: req.file.mimetype,
         fileSize: req.file.size,
         documentType
@@ -88,7 +94,9 @@ router.post(
       });
       return res.status(201).json({ message: 'Document uploaded successfully', document: safeDocument(document) });
     } catch (_error) {
-      if (cloudinaryResult?.public_id) {
+      if (localResult) {
+        await deleteLocalDocument(localResult.publicId).catch(() => undefined);
+      } else if (cloudinaryResult?.public_id) {
         await deleteDocument(cloudinaryResult.public_id, req.file.mimetype === 'application/pdf' ? 'raw' : 'image').catch(() => undefined);
       }
       return res.status(502).json({ message: 'Document upload failed' });
@@ -118,7 +126,11 @@ router.delete('/:id/documents/:documentId', authenticateToken, requireRole('citi
   const document = await UploadedDocument.findOne({ _id: documentId, applicationId: id, userId: req.user!.id });
   if (!document) return res.status(404).json({ message: 'Document not found' });
   try {
-    await deleteDocument(document.cloudinaryPublicId, document.resourceType);
+    if (document.cloudinaryPublicId.startsWith('local/')) {
+      await deleteLocalDocument(document.cloudinaryPublicId);
+    } else {
+      await deleteDocument(document.cloudinaryPublicId, document.resourceType);
+    }
     await document.deleteOne();
     await auditService.record({
       actorId: req.user!.id, actorRole: req.user!.role, action: 'DOCUMENT_DELETED',

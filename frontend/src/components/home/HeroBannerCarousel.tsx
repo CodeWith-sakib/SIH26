@@ -1,58 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ASSETS } from '../../assets/assets';
 import { useAccessibility } from '../../context/AccessibilityContext';
 
 const SLIDES = [
-  { src: ASSETS.heroHeritage, alt: 'Maharashtra heritage — a hill fort in the Sahyadri mountains' },
-  { src: ASSETS.multiDeptBanner, alt: 'Many Departments, One Platform, A Brighter Maharashtra — citizens accessing connected government services' }
+  { src: ASSETS.heroHeritage, alt: 'Maharashtra heritage and connected citizen services' },
+  { src: ASSETS.multiDeptBanner, alt: 'Many Departments, One Platform, A Brighter Maharashtra' },
+  { src: ASSETS.connectedMaharashtraBanner, alt: 'A connected Maharashtra works for people' }
 ];
+
+type Direction = 'next' | 'previous';
 
 export const HeroBannerCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [interacting, setInteracting] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [incomingIndex, setIncomingIndex] = useState<number | null>(null);
+  const [direction, setDirection] = useState<Direction>('next');
+  const [moving, setMoving] = useState(false);
+  const [entered, setEntered] = useState(false);
+  const animationTimer = useRef<number>();
   const { pauseAnimations } = useAccessibility();
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReducedMotion(media.matches);
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
+
+  const startTransition = (nextIndex: number, nextDirection: Direction) => {
+    if (moving || nextIndex === currentIndex) return;
+    setDirection(nextDirection);
+    setIncomingIndex(nextIndex);
+    setMoving(true);
+    setEntered(false);
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setEntered(true));
+    });
+    animationTimer.current = window.setTimeout(() => {
+      setCurrentIndex(nextIndex);
+      setIncomingIndex(null);
+      setMoving(false);
+      setEntered(false);
+    }, 720);
+  };
+
+  useEffect(() => () => {
+    if (animationTimer.current) window.clearTimeout(animationTimer.current);
   }, []);
-  const motionPaused = paused || pauseAnimations || reducedMotion;
+
   useEffect(() => {
-    if (motionPaused || interacting) return;
-    const timer = window.setInterval(() => setCurrentIndex(index => (index + 1) % SLIDES.length), 6000);
-    return () => window.clearInterval(timer);
-  }, [currentIndex, motionPaused, interacting]);
+    if (pauseAnimations || moving) return;
+    const timer = window.setTimeout(() => {
+      startTransition((currentIndex + 1) % SLIDES.length, 'next');
+    }, 6000);
+    return () => window.clearTimeout(timer);
+  }, [currentIndex, moving, pauseAnimations]);
+
+  const showNext = () => startTransition((currentIndex + 1) % SLIDES.length, 'next');
+  const showPrevious = () => startTransition((currentIndex - 1 + SLIDES.length) % SLIDES.length, 'previous');
+
+  const currentSlide = SLIDES[currentIndex];
+  const incomingSlide = incomingIndex === null ? null : SLIDES[incomingIndex];
 
   return (
-    <section aria-label="MahaSetu highlights" aria-roledescription="carousel" className="hero-carousel relative w-full overflow-hidden"
-      onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
-      onFocusCapture={() => setInteracting(true)}
-      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
-      <div className="flex w-full transition-transform duration-700 ease-in-out motion-reduce:transition-none"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-        {SLIDES.map((slide, index) => (
-          <div key={slide.src} className="w-full shrink-0" role="group" aria-roledescription="slide"
-            aria-label={`${index + 1} of ${SLIDES.length}`} aria-hidden={index !== currentIndex}>
-            <img src={slide.src} alt={slide.alt} className="block w-full aspect-[3/1] object-cover" fetchPriority={index === 0 ? 'high' : 'auto'} />
-          </div>
-        ))}
+    <section aria-label="MahaSetu highlights" aria-roledescription="carousel" className="hero-carousel relative aspect-[3/1] w-full overflow-hidden">
+      <div className="absolute inset-0">
+        <img src={currentSlide.src} alt={currentSlide.alt} className="absolute inset-0 block h-full w-full object-cover" />
+        {incomingSlide && (
+          <img
+            src={incomingSlide.src}
+            alt={incomingSlide.alt}
+            className="absolute inset-0 block h-full w-full object-cover transition-transform duration-700 ease-in-out"
+            style={{
+              transform: entered
+                ? 'translateX(0)'
+                : `translateX(${direction === 'next' ? '100%' : '-100%'})`
+            }}
+          />
+        )}
       </div>
-      <button onClick={() => setCurrentIndex(index => (index - 1 + SLIDES.length) % SLIDES.length)} aria-label="Previous banner" className="hero-arrow left-2 sm:left-6"><ChevronLeft /></button>
-      <button onClick={() => setCurrentIndex(index => (index + 1) % SLIDES.length)} aria-label="Next banner" className="hero-arrow right-2 sm:right-6"><ChevronRight /></button>
-      <div className="absolute bottom-1 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center rounded-full bg-slate-900/65 px-2">
+      <button onClick={showPrevious} disabled={moving} aria-label="Previous banner" className="hero-arrow left-2 disabled:opacity-50 sm:left-6"><ChevronLeft /></button>
+      <button onClick={showNext} disabled={moving} aria-label="Next banner" className="hero-arrow right-2 disabled:opacity-50 sm:right-6"><ChevronRight /></button>
+      <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 items-center rounded-full bg-slate-900/65 px-2 sm:bottom-4">
         {SLIDES.map((slide, index) => (
-          <button key={slide.src} onClick={() => setCurrentIndex(index)} aria-label={`Go to banner ${index + 1}`} aria-current={currentIndex === index ? 'true' : undefined} className="flex h-8 w-8 items-center justify-center">
+          <button
+            key={slide.src}
+            onClick={() => startTransition(index, index > currentIndex ? 'next' : 'previous')}
+            disabled={moving || index === currentIndex}
+            aria-label={`Go to banner ${index + 1}`}
+            aria-current={currentIndex === index ? 'true' : undefined}
+            className="flex h-8 w-8 items-center justify-center disabled:cursor-default"
+          >
             <span className={`h-2 rounded-full ${currentIndex === index ? 'w-5 bg-white' : 'w-2 bg-white/60'}`} />
           </button>
         ))}
-        <button onClick={() => setPaused(value => !value)} disabled={pauseAnimations || reducedMotion} aria-label={motionPaused ? 'Play banner carousel' : 'Pause banner carousel'} className="flex h-8 w-8 items-center justify-center text-white disabled:opacity-50">
-          {motionPaused ? <Play size={14} /> : <Pause size={14} />}
-        </button>
       </div>
     </section>
   );

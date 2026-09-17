@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenMobileMenu }
               </button>
 
               {notificationOpen && (
-                <div className="fixed right-4 top-24 sm:absolute sm:right-0 sm:top-auto sm:mt-2 w-[min(22rem,calc(100vw-2rem))] bg-white rounded-xl border border-gov-border shadow-portal-hover z-50 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-[min(22rem,calc(100vw-2rem))] bg-white rounded-xl border border-gov-border shadow-portal-hover z-50 overflow-hidden">
                   <div className="px-4 py-3 border-b flex justify-between items-center"><span className="text-sm font-bold text-gov-dark">Notifications</span>{unreadCount > 0 && <button className="text-xs text-gov-blue font-semibold" onClick={async () => { await notificationsApi.markAllRead(); setNotifications(items => items.map(item => ({ ...item, read: true }))); setUnreadCount(0); }}>Mark all read</button>}</div>
                   <div className="max-h-96 overflow-y-auto">
                     {notifications.length === 0 ? <p className="p-5 text-xs text-slate-500 text-center">No notifications yet.</p> : notifications.map(item => (
@@ -174,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenMobileMenu }
 
               {/* Profile Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-gov-border shadow-portal-hover py-2 z-50 animate-fade-in">
+                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-gov-border shadow-portal-hover py-2 z-50 animate-fade-in">
                   <div className="px-4 py-2 border-b border-gov-border">
                     <p className="text-xs font-bold text-gov-textPrimary truncate">{user.name}</p>
                     <p className="text-[11px] text-gov-textSecondary truncate">{user.email || user.phone}</p>
@@ -182,6 +182,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenMobileMenu }
 
                   <div className="py-1">
                     <Link to="/employment" className="flex items-center gap-2.5 px-4 py-2 text-xs text-gov-textPrimary hover:bg-gov-surface hover:text-gov-blue"><Briefcase className="w-4 h-4 text-gov-blue" />Employment Services</Link>
+                    <Link to="/citizen-passport" className="flex items-center gap-2.5 px-4 py-2 text-xs text-gov-textPrimary hover:bg-gov-surface hover:text-gov-blue"><ShieldCheck className="w-4 h-4 text-gov-blue" />Citizen Data Passport</Link>
                     <Link to="/profile" className="flex items-center gap-2.5 px-4 py-2 text-xs text-gov-textPrimary hover:bg-gov-surface hover:text-gov-blue"><UserIcon className="w-4 h-4 text-gov-blue" />My Profile</Link>
                     <Link to="/employment/applications" className="flex items-center gap-2.5 px-4 py-2 text-xs text-gov-textPrimary hover:bg-gov-surface hover:text-gov-blue"><FileText className="w-4 h-4 text-gov-blue" />Track Applications</Link>
                     <Link

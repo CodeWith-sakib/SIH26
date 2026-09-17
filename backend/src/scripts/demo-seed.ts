@@ -123,6 +123,19 @@ export async function seedDemoData(): Promise<void> {
     phone: '+919800002222',
     registrationNumber: 'EDU2023005678'
   });
+  await upsertUser('Nikhil Korada', 'nikhilkorada06@gmail.com', '12345678', 'citizen', {
+    dateOfBirth: '2005-12-06',
+    phone: '09182820217',
+    registrationNumber: 'EDU2025007788',
+    college: 'Government College of Engineering, Pune',
+    gender: 'Male',
+    address: 'Shivajinagar, Pune',
+    district: 'Pune',
+    state: 'Maharashtra',
+    pincode: '411005',
+    education: 'Bachelor of Technology',
+    category: 'General'
+  });
   await upsertUser('Asha Verma', 'impostor@test.com', 'password123', 'citizen', {
     dateOfBirth: '1990-01-01',
     phone: '+919800003333',

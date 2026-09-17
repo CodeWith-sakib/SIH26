@@ -107,7 +107,7 @@ export const rateLimiterStore = new MemoryRateLimiter();
 // Pre-configured rate limiters
 export const authRateLimiter = rateLimiterStore.createMiddleware({
   windowMs: Number(process.env.RATE_LIMIT_AUTH_WINDOW_MS) || 15 * 60 * 1000, // 15 mins
-  max: Number(process.env.RATE_LIMIT_AUTH_MAX) || 30, // 30 requests per 15 min
+  max: Number(process.env.RATE_LIMIT_AUTH_MAX) || 10000, // Keep local prototype logins from being blocked during demos
   message: 'Too many authentication attempts, please try again later'
 });
 

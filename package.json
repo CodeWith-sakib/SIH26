@@ -13,5 +13,17 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
-  }
+  },
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeWith-sakib/SIH26.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeWith-sakib/SIH26/issues"
+  },
+  "homepage": "https://github.com/CodeWith-sakib/SIH26#readme"
 }

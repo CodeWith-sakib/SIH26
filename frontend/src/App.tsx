@@ -10,6 +10,7 @@ import { MobileDrawer } from './components/layout/MobileDrawer';
 import { AccessibilityModal } from './components/layout/AccessibilityModal';
 import { FloatingControls } from './components/layout/FloatingControls';
 import { GlobalSearchModal } from './components/common/GlobalSearchModal';
+import { ApplicationAssistant } from './components/common/ApplicationAssistant';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 
 // Pages
@@ -31,6 +32,7 @@ import { EmploymentApplicationsPage } from './pages/EmploymentApplicationsPage';
 import { EmploymentTrackingPage } from './pages/EmploymentTrackingPage';
 import { EmploymentSuccessPage } from './pages/EmploymentSuccessPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { CitizenDataPassportPage } from './pages/CitizenDataPassportPage';
 
 const AppLayout: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -84,6 +86,7 @@ const AppLayout: React.FC = () => {
           <Route path="/employment/applications/:id" element={<ProtectedRoute><EmploymentTrackingPage /></ProtectedRoute>} />
           <Route path="/employment/applications/:id/success" element={<ProtectedRoute><EmploymentSuccessPage /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/citizen-passport" element={<ProtectedRoute><CitizenDataPassportPage /></ProtectedRoute>} />
           <Route path="/track-applications" element={<ProtectedRoute><Navigate to="/employment/applications" replace /></ProtectedRoute>} />
           <Route
             path="/applications"
@@ -120,6 +123,7 @@ const AppLayout: React.FC = () => {
 
       {/* 5. Floating Controls (Accessibility & Back-to-Top) */}
       <FloatingControls onOpenAccessibilityModal={() => setIsAccessibilityOpen(true)} />
+      <ApplicationAssistant />
 
       {/* Modals and Drawers */}
       <MobileDrawer

@@ -7,10 +7,13 @@ import Application from '../models/Application';
 import Consent from '../models/Consent';
 import User from '../models/User';
 import UploadedDocument from '../models/UploadedDocument';
+import Department from '../models/Department';
 import { seedEmploymentJobs } from '../services/employment-job.service';
 import { employmentPortalAdapter } from '../services/employment-portal.adapter';
 import { auditService } from '../audit/audit.service';
 import { createNotification } from '../services/notification.service';
+import { integrationEngine } from '../engine/integration-engine';
+import { entityMatcher } from '../services/entity-matcher';
 
 const router = Router();
 router.use(authenticateToken, requireRole('citizen'));
@@ -70,14 +73,113 @@ router.patch('/applications/:id', async (req: Request<{ id: string }>, res: Resp
 });
 router.post('/applications/:id/fetch-data', async (req: Request<{ id: string }>, res: Response) => {
   const application = await owned(req.params.id, req.user!.id); if (!application) return res.status(404).json({ message: 'Application not found' });
-  const consent = await Consent.findOne({ applicationId: application._id, citizenId: req.user!.id, status: 'active', dataCategories: 'employment' });
+  const consent = await Consent.findOne({ applicationId: application._id, citizenId: req.user!.id, status: 'active' });
   if (!consent) return res.status(403).json({ message: 'Active employment data consent is required' });
   const user = await User.findById(req.user!.id).lean(); if (!user) return res.status(404).json({ message: 'Citizen profile not found' });
   const data: Record<string, string> = { fullName: user.name, email: user.email };
-  if (user.dateOfBirth) data.dateOfBirth = user.dateOfBirth; if (user.phone) data.mobile = user.phone; if (user.registrationNumber) data.citizenReference = user.registrationNumber;
-  application.fetchedFields = Object.keys(data); application.consentId = consent._id; await application.save();
+  const sources: Record<string, string> = { fullName: 'Citizen profile', email: 'Citizen profile' };
+  if (user.dateOfBirth) { data.dateOfBirth = user.dateOfBirth; sources.dateOfBirth = 'Citizen profile'; }
+  if (user.phone) { data.mobile = user.phone; sources.mobile = 'Citizen profile'; }
+  if (user.registrationNumber) { data.citizenReference = user.registrationNumber; sources.citizenReference = 'Citizen profile'; }
+  const profileFields: Record<string, string | undefined> = {
+    gender: user.gender,
+    institution: user.college,
+    highestQualification: user.education,
+    category: user.category,
+    address: user.address,
+    district: user.district,
+    state: user.state,
+    pincode: user.pincode
+  };
+  for (const [field, value] of Object.entries(profileFields)) {
+    if (value) {
+      data[field] = value;
+      sources[field] = 'Citizen profile';
+    }
+  }
+  const profileDataFound = Object.keys(profileFields).some(field => Boolean(data[field]));
+
+  const departmentCodes = consent.dataCategories
+    .filter(category => category === 'education' || category === 'employment')
+    .map(category => category.toUpperCase());
+  const availableDepartments = await Department.find({
+    code: { $in: departmentCodes },
+    active: true
+  }).lean();
+  let departmentDataFound = false;
+  const matchedDepartments: Array<{ department: string; confidence: number }> = [];
+
+  for (const department of availableDepartments) {
+    if (!(await integrationEngine.isDepartmentAvailable(department.code))) continue;
+    let departmentData;
+    try {
+      departmentData = await integrationEngine.getCitizenData({
+        departmentCode: department.code,
+        citizenIdentifier: {
+          name: user.name,
+          dateOfBirth: user.dateOfBirth,
+          email: user.email,
+          phone: user.phone
+        },
+        requestedCategories: department.dataCategories || []
+      });
+    } catch {
+      continue;
+    }
+    if (!departmentData) continue;
+
+    const match = await entityMatcher.match({
+      sourceData: departmentData,
+      applicationData: {
+        name: user.name,
+        dateOfBirth: user.dateOfBirth,
+        email: user.email,
+        phone: user.phone,
+        registrationNumber: user.registrationNumber
+      }
+    });
+    if (!match.samePerson) continue;
+
+    departmentDataFound = true;
+    matchedDepartments.push({
+      department: department.name,
+      confidence: match.confidence
+    });
+
+    const source = department.name;
+    const mapped: Record<string, unknown> = {
+      fullName: departmentData.name,
+      dateOfBirth: departmentData.dateOfBirth,
+      mobile: departmentData.phone,
+      email: departmentData.email,
+      citizenReference: departmentData.registrationNumber,
+      highestQualification: departmentData.qualification,
+      score: departmentData.score
+    };
+    for (const [field, value] of Object.entries(mapped)) {
+      if (value !== undefined && value !== null && String(value).trim()) {
+        data[field] = String(value);
+        sources[field] = source;
+      }
+    }
+  }
+
+  if (!departmentDataFound && !profileDataFound) {
+    return res.status(404).json({
+      message: 'Your data was not found in any connected department.'
+    });
+  }
+
+  application.fetchedFields = Object.keys(data);
+  application.consentId = consent._id;
+  await application.save();
   await auditService.record({ actorId: req.user!.id, actorRole: req.user!.role, action: 'EMPLOYMENT_DATA_FETCHED', applicationId: application.id, consentId: consent.id, purpose: consent.purpose || 'Prefill employment application', requestId: req.requestId, outcome: 'SUCCESS', metadata: { fields: Object.keys(data), source: consent.dataSource || 'MahaSetu citizen profile' } });
-  return res.json({ data, fetchedFields: Object.keys(data) });
+  return res.json({
+    data,
+    fetchedFields: Object.keys(data),
+    sources,
+    matchedDepartments
+  });
 });
 router.post('/applications/:id/submit', async (req: Request<{ id: string }>, res: Response) => {
   const application = await owned(req.params.id, req.user!.id); if (!application) return res.status(404).json({ message: 'Application not found' });

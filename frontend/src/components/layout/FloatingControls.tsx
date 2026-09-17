@@ -25,7 +25,7 @@ export const FloatingControls: React.FC<FloatingControlsProps> = ({ onOpenAccess
   };
 
   return (
-    <aside aria-label="Quick site utilities" className="fixed right-4 bottom-6 z-40 flex flex-col items-center gap-2.5">
+    <aside aria-label="Quick site utilities" className="fixed left-4 bottom-6 z-40 flex flex-col items-center gap-2.5">
       {/* Floating Accessibility Trigger */}
       <button
         onClick={onOpenAccessibilityModal}

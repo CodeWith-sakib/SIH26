@@ -1,9 +1,11 @@
 import 'dotenv/config';
 
 import { startMockServers } from '../__tests__/mock-department-servers';
+import { seedDemoData } from './demo-seed';
 
 async function main(): Promise<void> {
   await startMockServers();
+  await seedDemoData();
   const { startServer } = require('../../server');
   await startServer();
 }

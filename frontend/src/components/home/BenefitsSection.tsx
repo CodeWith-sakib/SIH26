@@ -45,7 +45,7 @@ export const BenefitsSection: React.FC = () => {
     <section className="py-14 sm:py-20 bg-gov-blue text-white" aria-labelledby="benefits-heading">
       <div className="max-w-portal mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-5xl mb-10">
+        <div className="max-w-5xl mx-auto mb-10 text-center">
           <h2 id="benefits-heading" className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
             Benefits of MahaSetu
           </h2>
@@ -55,19 +55,19 @@ export const BenefitsSection: React.FC = () => {
         </div>
 
         {/* 2 x 2 Static White Cards Grid (Desktop: 2 columns, Mobile: 1 column) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {BENEFITS_DATA.map((card) => (
             <div
               key={card.id}
-              className="bg-white text-gov-textPrimary rounded-2xl p-6 sm:p-7 shadow-portal border border-gov-border hover:shadow-portal-hover transition-shadow duration-200 flex flex-col justify-between"
+              className="bg-white text-gov-textPrimary rounded-2xl p-6 sm:p-7 shadow-portal border border-gov-border hover:shadow-portal-hover transition-shadow duration-200 flex flex-col justify-between text-center"
             >
-              <div className="flex flex-col items-start gap-4">
+              <div className="flex flex-col items-center gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gov-lightblue flex items-center justify-center flex-shrink-0">
                   {card.icon}
                 </div>
 
                 <div className="space-y-1.5 flex-1">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-gov-lightblue text-gov-blue">
                       {card.tag}
                     </span>

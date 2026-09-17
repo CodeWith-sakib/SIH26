@@ -1,4 +1,7 @@
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto';
 
 function configureCloudinary(): void {
   const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
@@ -43,4 +46,29 @@ export async function deleteDocument(publicId: string, resourceType: 'image' | '
   if (result.result !== 'ok' && result.result !== 'not found') {
     throw new Error('Cloudinary deletion failed');
   }
+}
+
+const localDocumentDirectory = path.resolve(process.cwd(), 'uploads/documents');
+
+export async function uploadLocalDocument(
+  buffer: Buffer,
+  applicationId: string,
+  originalFileName: string,
+  mimeType: string
+): Promise<{ publicId: string; secureUrl: string; format: string }> {
+  await fs.mkdir(localDocumentDirectory, { recursive: true });
+  const extension = path.extname(originalFileName).toLowerCase() || (mimeType === 'application/pdf' ? '.pdf' : '.bin');
+  const fileName = `${applicationId}-${crypto.randomUUID()}${extension}`;
+  const filePath = path.join(localDocumentDirectory, fileName);
+  await fs.writeFile(filePath, buffer);
+  return {
+    publicId: `local/${fileName}`,
+    secureUrl: `/api/uploads/documents/${fileName}`,
+    format: extension.slice(1) || 'unknown'
+  };
+}
+
+export async function deleteLocalDocument(publicId: string): Promise<void> {
+  const fileName = path.basename(publicId);
+  await fs.unlink(path.join(localDocumentDirectory, fileName));
 }
