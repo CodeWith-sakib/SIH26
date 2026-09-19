@@ -1,24 +1,25 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only server.ts",
-    "demo": "ts-node --transpile-only src/scripts/demo.ts",
-    "demo:ml": "ML_MATCHER=python ts-node --transpile-only src/scripts/demo.ts",
-    "demo:mock": "ts-node --transpile-only src/__tests__/mock-department-servers.ts",
-    "self-check:matcher": "ts-node --transpile-only src/scripts/matcher-self-check.ts",
-    "self-check:reliability": "ts-node --transpile-only src/scripts/reliability-self-check.ts",
-    "self-check:consent": "ts-node --transpile-only src/scripts/consent-expiry-self-check.ts",
-    "self-check:audit": "ts-node --transpile-only src/scripts/audit-self-check.ts",
-    "self-check:security": "ts-node --transpile-only src/scripts/security-self-check.ts",
-    "self-check:e2e": "ts-node --transpile-only src/scripts/e2e-self-check.ts",
+    "start": "node dist/src/server.js",
+    "dev": "tsx watch src/server.ts",
+    "demo": "tsx src/scripts/demo.ts",
+    "demo:ml": "ML_MATCHER=python tsx src/scripts/demo.ts",
+
+    "self-check:matcher": "tsx src/scripts/matcher-self-check.ts",
+    "self-check:reliability": "tsx src/scripts/reliability-self-check.ts",
+    "self-check:consent": "tsx src/scripts/consent-expiry-self-check.ts",
+    "self-check:audit": "tsx src/scripts/audit-self-check.ts",
+    "self-check:security": "tsx src/scripts/security-self-check.ts",
+    "self-check:e2e": "tsx src/scripts/e2e-self-check.ts",
     "self-check:all": "npm run self-check:matcher && npm run self-check:reliability && npm run self-check:consent && npm run self-check:audit && npm run self-check:security && npm run self-check:auth && npm run self-check:e2e",
-    "self-check:auth": "ts-node --transpile-only src/scripts/auth-self-check.ts"
-    ,"seed:employment": "ts-node --transpile-only src/scripts/seed-employment-jobs.ts"
-    ,"seed:demo-citizen": "ts-node --transpile-only src/scripts/seed-demo-citizen.ts"
+    "self-check:auth": "tsx src/scripts/auth-self-check.ts",
+    "seed:employment": "tsx src/scripts/seed-employment-jobs.ts",
+    "seed:demo-citizen": "tsx src/scripts/seed-demo-citizen.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +31,7 @@
     "cloudinary": "^2.11.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "integration-engine": "*",
+    "fast-xml-parser": "^5.11.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.4",
     "multer": "^2.3.0",
@@ -43,8 +44,7 @@
     "@types/multer": "^2.2.0",
     "@types/node": "^26.4.1",
     "@types/xml2js": "^0.4.14",
-    "nodemon": "^3.1.14",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   }
 }

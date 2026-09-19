@@ -1,7 +1,7 @@
 import assert from 'assert';
 import mongoose from 'mongoose';
-import AuditLog, { AUDIT_ACTIONS, AuditAction } from '../audit/audit.model';
-import { auditService } from '../audit/audit.service';
+import AuditLog, { AUDIT_ACTIONS, AuditAction } from '../audit/audit.model.js';
+import { auditService } from '../audit/audit.service.js';
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27018/sih_demo';
 

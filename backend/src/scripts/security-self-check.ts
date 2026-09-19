@@ -1,8 +1,8 @@
 import assert from 'assert';
 import http from 'http';
 import axios, { AxiosError } from 'axios';
-import app from '../../server';
-import { rateLimiterStore } from '../middleware/rate-limiter';
+import app from '../server.js';
+import { rateLimiterStore } from '../shared/middleware/rateLimiter.js';
 
 const PORT = 5124;
 const baseURL = `http://127.0.0.1:${PORT}`;

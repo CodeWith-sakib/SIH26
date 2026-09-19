@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
-import { validateAndLoadConfig } from '../config/env';
-import User from '../models/User';
-import Application from '../models/Application';
-import UploadedDocument from '../models/UploadedDocument';
-import { uploadDocument } from '../services/cloudinary.service';
+import { validateConfig } from '../shared/config/index.js';
+import User from '../shared/models/User.js';
+import Application from '../shared/models/Application.js';
+import UploadedDocument from '../shared/models/UploadedDocument.js';
+import { DocumentService } from '../services/document/service/documentService.js';
 
 const DEMO_EMAIL = 'muhammadsaqib01@gmail.com';
 const DEMO_DOCUMENT_TYPE = 'MahaSetu Demo Identity Document';
@@ -42,7 +42,7 @@ function createDemoPdf(): Buffer {
 async function main(): Promise<void> {
   const password = process.env.DEMO_CITIZEN_PASSWORD;
   if (!password || password.length < 12) throw new Error('DEMO_CITIZEN_PASSWORD must be set locally and contain at least 12 characters');
-  const config = validateAndLoadConfig(); await mongoose.connect(config.mongoUri);
+  const config = validateConfig(); await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_demo');
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.findOneAndUpdate(
@@ -54,7 +54,7 @@ async function main(): Promise<void> {
     if (!application) application = await Application.create({ citizenId: user._id, applicationNumber: 'DEMO-CITIZEN-PROFILE-001', jobId: 'DEMO-PROFILE-DOCUMENT', department: 'MahaSetu Demo Services', position: 'Demo Citizen Profile', status: 'submitted', applicationKind: 'standard' });
     const existing = await UploadedDocument.findOne({ userId: user._id, applicationId: application._id, documentType: DEMO_DOCUMENT_TYPE });
     if (!existing) {
-      const pdf = createDemoPdf(); const uploaded = await uploadDocument(pdf, application._id.toString(), 'raw');
+      const pdf = createDemoPdf(); const uploaded = await (new DocumentService()).uploadDocument(pdf, application._id.toString(), 'raw');
       await UploadedDocument.create({ applicationId: application._id, userId: user._id, originalFileName: 'mahasetu-demo-identity-document.pdf', cloudinaryPublicId: uploaded.public_id, cloudinarySecureUrl: uploaded.secure_url, resourceType: 'raw', format: uploaded.format || 'pdf', mimeType: 'application/pdf', fileSize: pdf.length, documentType: DEMO_DOCUMENT_TYPE });
     }
     console.log(`Demo citizen seeded successfully for ${DEMO_EMAIL}; demo document is available.`);

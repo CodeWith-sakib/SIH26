@@ -1,0 +1,14 @@
+{
+  "name": "mock-education-department",
+  "version": "1.0.0",
+  "description": "Mock Education Department API",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

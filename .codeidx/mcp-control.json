@@ -2,13 +2,13 @@
   "schema_version": "codeidx.mcp/0.1",
   "server": "codeidx-mcp-control",
   "transport": "http",
-  "url": "http://127.0.0.1:41039/start",
-  "health_url": "http://127.0.0.1:41039/health",
+  "url": "http://127.0.0.1:42289/start",
+  "health_url": "http://127.0.0.1:42289/health",
   "workspace_id": "ws_bbfaba7ecdbd",
-  "pid": 1563,
-  "token": "678ef20e5eaa3e499db0ca8f2ba1b5d843c3b39615867e60",
-  "mcp_endpoint": "http://127.0.0.1:37209/mcp",
-  "started_at": "2026-09-17T12:52:25.490Z",
-  "updated_at": "2026-09-17T12:52:25.490Z",
-  "lease_expires_at": "2026-09-17T12:53:25.490Z"
+  "pid": 9642,
+  "token": "fefbe0732c90648010ba0056b95b3a2d1f4bc43e4c2be216",
+  "mcp_endpoint": "http://127.0.0.1:34475/mcp",
+  "started_at": "2026-09-18T05:35:56.089Z",
+  "updated_at": "2026-09-18T05:35:56.089Z",
+  "lease_expires_at": "2026-09-18T05:36:56.089Z"
 }

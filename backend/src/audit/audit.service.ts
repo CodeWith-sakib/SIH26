@@ -1,5 +1,5 @@
-import AuditLog, { AuditAction, AuditOutcome } from './audit.model';
-import { UserRole } from '../types/auth';
+import AuditLog, { AuditAction, AuditOutcome } from './audit.model.js';
+import { UserRole } from '../shared/constants/roles.js';
 
 export interface AuditEventInput {
   actorId?: string | null;

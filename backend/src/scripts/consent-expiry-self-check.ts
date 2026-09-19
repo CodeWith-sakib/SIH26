@@ -1,11 +1,11 @@
 import assert from 'assert';
 import mongoose from 'mongoose';
-import Consent from '../models/Consent';
-import User from '../models/User';
-import Application from '../models/Application';
-import AuditLog from '../audit/audit.model';
-import { consentExpiryService } from '../services/consent-expiry.service';
-import { VerificationService, VerificationError } from '../services/verification.service';
+import Consent from '../shared/models/Consent.js';
+import User from '../shared/models/User.js';
+import Application from '../shared/models/Application.js';
+import AuditLog from '../audit/audit.model.js';
+import { consentExpiryService } from '../services/consent/service/consentExpiryService.js';
+import { VerificationService, VerificationError } from '../services/verification/service/verificationService.js';
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27018/sih_demo';
 

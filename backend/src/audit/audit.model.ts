@@ -1,5 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { UserRole } from '../types/auth';
+import { UserRole } from '../types/auth.js';
 
 export type AuditAction =
   | 'USER_LOGIN'

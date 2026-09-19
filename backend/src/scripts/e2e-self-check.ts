@@ -9,13 +9,10 @@ const port = process.env.PORT;
 const baseURL = `http://127.0.0.1:${port}`;
 
 async function startStack(): Promise<void> {
-  const { seedDemoData } = require('./demo-seed') as typeof import('./demo-seed');
+  const { seedDemoData } = require('./demo-seed.js') as typeof import('./demo-seed.js');
   await seedDemoData();
 
-  const { startMockServers } = require('../__tests__/mock-department-servers') as typeof import('../__tests__/mock-department-servers');
-  await startMockServers();
-
-  const { startServer } = require('../../server') as typeof import('../../server');
+  const { startServer } = require('../server.js') as typeof import('../server.js');
   await startServer();
 }
 

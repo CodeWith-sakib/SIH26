@@ -1,7 +1,7 @@
 import assert from 'assert';
 import http from 'http';
-import { HttpClient } from '../engine/http/http-client';
-import { EngineError } from '../engine/errors/engine-errors';
+import { HttpClient } from '../services/integrationEngine/http/HttpClient.js';
+import { EngineError } from '../services/integrationEngine/errors/EngineError.js';
 
 let requestCount = 0;
 

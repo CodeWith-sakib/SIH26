@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import Department from '../models/Department';
-import Integration from '../models/Integration';
-import User from '../models/User';
+import Department from '../shared/models/Department.js';
+import Integration from '../shared/models/Integration.js';
+import User from '../shared/models/User.js';
 
 async function upsertDepartment(name: string, code: string, dataCategories: string[]): Promise<{ _id: mongoose.Types.ObjectId; code: string }> {
   return Department.findOneAndUpdate(

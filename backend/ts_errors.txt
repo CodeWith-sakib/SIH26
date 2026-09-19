@@ -1,0 +1,47 @@
+src/audit/audit.model.ts(2,26): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../types/auth.js'?
+src/scripts/audit-self-check.ts(3,54): error TS2307: Cannot find module '../audit/audit.model' or its corresponding type declarations.
+src/scripts/audit-self-check.ts(4,30): error TS2307: Cannot find module '../audit/audit.service' or its corresponding type declarations.
+src/scripts/audit-self-check.ts(132,38): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/scripts/audit-self-check.ts(144,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/scripts/auth-self-check.ts(1,152): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/auth-self-check.ts(1,183): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/auth-self-check.ts(1,220): error TS2307: Cannot find module '../audit/audit.model' or its corresponding type declarations.
+src/scripts/auth-self-check.ts(1,271): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/auth-self-check.ts(3,2059): error TS7006: Parameter 'x' implicitly has an 'any' type.
+src/scripts/auth-self-check.ts(3,2113): error TS7006: Parameter 'x' implicitly has an 'any' type.
+src/scripts/consent-expiry-self-check.ts(3,21): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/consent-expiry-self-check.ts(4,18): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/consent-expiry-self-check.ts(5,25): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/consent-expiry-self-check.ts(6,22): error TS2307: Cannot find module '../audit/audit.model' or its corresponding type declarations.
+src/scripts/consent-expiry-self-check.ts(7,38): error TS2307: Cannot find module '../services/consent-expiry.service' or its corresponding type declarations.
+src/scripts/consent-expiry-self-check.ts(8,56): error TS2307: Cannot find module '../services/verification.service' or its corresponding type declarations.
+src/scripts/consent-expiry-self-check.ts(108,47): error TS18046: 'error' is of type 'unknown'.
+src/scripts/demo-seed.ts(4,24): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/demo-seed.ts(5,25): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/demo-seed.ts(6,18): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/demo.ts(3,34): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/demo.ts(4,30): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './demo-seed.js'?
+src/scripts/e2e-self-check.ts(12,68): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './demo-seed.js'?
+src/scripts/e2e-self-check.ts(15,97): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/e2e-self-check.ts(18,68): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/inspect-db.ts(3,24): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/inspect-db.ts(4,25): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/inspect-db.ts(5,18): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/matcher-self-check.ts(2,35): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/matcher-self-check.ts(3,38): error TS2307: Cannot find module '../services/integration-engine.interface' or its corresponding type declarations.
+src/scripts/reliability-self-check.ts(3,28): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/reliability-self-check.ts(4,29): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/security-self-check.ts(5,34): error TS2307: Cannot find module '../middleware/rate-limiter.js' or its corresponding type declarations.
+src/scripts/seed-demo-citizen.ts(4,39): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/seed-demo-citizen.ts(5,18): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/seed-demo-citizen.ts(6,25): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/seed-demo-citizen.ts(7,30): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/seed-demo-citizen.ts(8,32): error TS2307: Cannot find module '../services/cloudinary.service' or its corresponding type declarations.
+src/scripts/seed-employment-jobs.ts(3,39): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/scripts/seed-employment-jobs.ts(4,36): error TS2307: Cannot find module '../services/employment-job.service' or its corresponding type declarations.
+src/services/auth/repository/UserRepository.ts(26,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '{ name: string; email: string; password: string; role?: string | undefined; isVerified?: boolean | undefined; dateOfBirth?: string | undefined; phone?: string | undefined; registrationNumber?: string | undefined; }' is not assignable to parameter of type '{ name?: string | RegExp | undefined; email?: string | RegExp | undefined; password?: string | RegExp | undefined; role?: RegExp | "admin" | "department_officer" | "citizen" | undefined; ... 70 more ...; validateSync?: { ...; } | undefined; }'.
+      Types of property 'role' are incompatible.
+        Type 'string | undefined' is not assignable to type 'RegExp | "admin" | "department_officer" | "citizen" | undefined'.
+          Type 'string' is not assignable to type 'RegExp | "admin" | "department_officer" | "citizen" | undefined'.

@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { EntityMatcherImpl } from '../services/entity-matcher';
-import { CanonicalCitizenData } from '../services/integration-engine.interface';
+import { EntityMatcherImpl } from '../services/integrationEngine/entityMatcher/EntityMatcherImpl.js';
+import { CanonicalCitizenData } from '../services/integrationEngine/parsing/FieldMapper.js';
 
 const matcher = new EntityMatcherImpl();
 
